@@ -61,7 +61,7 @@ function CacheNodeConfigModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-80">
+      <DialogContent className="w-96">
         <DialogHeader>
           <DialogTitle>{id}</DialogTitle>
         </DialogHeader>

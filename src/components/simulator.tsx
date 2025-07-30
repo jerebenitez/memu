@@ -1,10 +1,12 @@
 import { Background, BackgroundVariant, Controls, MiniMap, ReactFlow, ReactFlowProps } from "@xyflow/react";
 import { CPUNode } from "./nodes/cpu";
 import { CacheNode } from "./nodes/cache";
+import { MemoryNode } from "./nodes/memory";
 
 const nodeTypes = {
     cpu: CPUNode,
-    cache: CacheNode
+    cache: CacheNode,
+    memory: MemoryNode
 }
 
 export function Simulator(props: ReactFlowProps) {

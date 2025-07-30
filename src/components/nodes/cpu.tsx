@@ -29,7 +29,10 @@ export function CPUNode({ data }: NodeProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="text-xs text-muted-foreground">Processor Core</div>
+        <div className="flex flex-col gap-3">
+            <Button variant="outline" size="sm" className="text-xs h-6">Edit code</Button>
+            <div className="text-xs text-muted-foreground">Processor Core</div>
+        </div>
         <Handle type="source" position={Position.Right} />
       </CardContent>
     </Card>)

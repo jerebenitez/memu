@@ -35,7 +35,7 @@ export function NavBar({
       position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
     };
 
-    setNodes((nds) => [...nds, newNode]);
+    setNodes(nds => [...nds, newNode]);
   };
 
   const addCacheNode = () => {
@@ -57,7 +57,7 @@ export function NavBar({
       position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
     };
 
-    setNodes((nds) => [...nds, newNode]);
+    setNodes(nds => [...nds, newNode]);
   };
 
   return (
