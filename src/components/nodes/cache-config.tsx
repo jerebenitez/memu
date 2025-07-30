@@ -14,38 +14,37 @@ import {
 } from "@/components/ui/select";
 import { Dispatch, SetStateAction } from "react";
 import { Input } from "../ui/input";
+import { CacheConfig } from "./cache";
 
-export type WritePolicy = "write-back" | "write-through";
-
-type Associativity =
-  | "direct-mapped"
-  | "2-way"
-  | "4-way"
-  | "8-way"
-  | "fully-associative";
-
-export interface CacheConfig {
-  size: string;
-  accessTime: number; // in nS
-  blockSize: string;
-  associativity: Associativity;
-  evictionPolicy: string;
-  writePolicy: WritePolicy;
-  writeAllocate: string;
-}
+const validSizes = [
+  "16KB",
+  "32KB",
+  "64KB",
+  "128KB",
+  "256KB",
+  "512KB",
+  "1MB",
+  "2MB",
+];
+const associativityLevels = [
+  { value: "direct-mapped", label: "Direct Mapped" },
+  { value: "2-way", label: "2-way Set Associative" },
+  { value: "4-way", label: "4-way Set Associative" },
+  { value: "8-way", label: "8-way Set Associative" },
+  { value: "fully-associative", label: "Fully Associative" },
+];
+const validBlockSizes = ["32B", "64B", "128B"];
 
 export function CacheNodeConfigModal({
   id,
   config,
   setConfig,
-  setLabel,
   open,
   onOpenChange,
 }: {
   id: string;
   config: CacheConfig & { label: string };
   setConfig: Dispatch<SetStateAction<CacheConfig>>;
-  setLabel: Dispatch<SetStateAction<string>>;
   open: boolean;
   onOpenChange: (state: boolean) => void;
 }) {
@@ -63,10 +62,13 @@ export function CacheNodeConfigModal({
           <DialogTitle>{id}</DialogTitle>
         </DialogHeader>
         <div className="space-y-6 pt-3 border-t">
-            <Label className="text-xs">Label</Label>
-            <Input value={config.label} onChange={e => {
-                setLabel(e.target.value)
-            }} />
+          <Label className="text-xs">Label</Label>
+          <Input
+            value={config.label}
+            onChange={(e) => {
+              updateConfig("label", e.target.value);
+            }}
+          />
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-xs">Size</Label>
@@ -78,14 +80,11 @@ export function CacheNodeConfigModal({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="16KB">16KB</SelectItem>
-                  <SelectItem value="32KB">32KB</SelectItem>
-                  <SelectItem value="64KB">64KB</SelectItem>
-                  <SelectItem value="128KB">128KB</SelectItem>
-                  <SelectItem value="256KB">256KB</SelectItem>
-                  <SelectItem value="512KB">512KB</SelectItem>
-                  <SelectItem value="1MB">1MB</SelectItem>
-                  <SelectItem value="2MB">2MB</SelectItem>
+                  {validSizes.map((size) => (
+                    <SelectItem key={size} value={size}>
+                      {size}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -99,9 +98,11 @@ export function CacheNodeConfigModal({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="32B">32B</SelectItem>
-                  <SelectItem value="64B">64B</SelectItem>
-                  <SelectItem value="128B">128B</SelectItem>
+                  {validBlockSizes.map((size) => (
+                    <SelectItem key={size} value={size}>
+                      {size}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -116,13 +117,11 @@ export function CacheNodeConfigModal({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="direct-mapped">Direct Mapped</SelectItem>
-                <SelectItem value="2-way">2-way Set Associative</SelectItem>
-                <SelectItem value="4-way">4-way Set Associative</SelectItem>
-                <SelectItem value="8-way">8-way Set Associative</SelectItem>
-                <SelectItem value="fully-associative">
-                  Fully Associative
-                </SelectItem>
+                {associativityLevels.map(({ label, value }) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -183,4 +182,3 @@ export function CacheNodeConfigModal({
     </Dialog>
   );
 }
-

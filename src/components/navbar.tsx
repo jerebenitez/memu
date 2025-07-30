@@ -44,15 +44,13 @@ export function NavBar({
       type: "cache",
       data: {
         label: "New Cache",
-        config: {
-          size: "1MB",
-          accessTime: 10,
-          blockSize: "64B",
-          associativity: "8-way",
-          evictionPolicy: "LRU",
-          writePolicy: "write-back",
-          writeAllocate: "write-allocate",
-        },
+        size: "1MB",
+        accessTime: 10,
+        blockSize: "64B",
+        associativity: "8-way",
+        evictionPolicy: "LRU",
+        writePolicy: "write-back",
+        writeAllocate: "write-allocate",
       },
       position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
     };
