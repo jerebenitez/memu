@@ -136,9 +136,6 @@ export function NavBar({
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <div className="ml-auto">
-        <ThemeToggle />
-      </div>
     </div>
   );
 }
