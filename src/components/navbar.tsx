@@ -1,29 +1,28 @@
+import { Check, Cpu, HardDrive, Play, Sheet } from "lucide-react";
 import {
-  ChevronDown,
-  ChevronUp,
-  Cpu,
-  HardDrive,
-  MemoryStick,
-  Play,
-  Sheet,
-} from "lucide-react";
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
 import { Button } from "./ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { ThemeToggle } from "./theme-toggle";
 import { Node } from "@xyflow/react";
+import { useTheme } from "next-themes";
 
 export function NavBar({
   setNodes,
 }: {
   setNodes: Dispatch<SetStateAction<Node[]>>;
 }) {
-  const [toolbarOpen, setToolbarOpen] = useState<boolean>(false);
+  const { setTheme, theme } = useTheme();
 
   const addCPUNode = () => {
     const newNode: Node = {
@@ -35,7 +34,7 @@ export function NavBar({
       position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
     };
 
-    setNodes(nds => [...nds, newNode]);
+    setNodes((nds) => [...nds, newNode]);
   };
 
   const addCacheNode = () => {
@@ -57,38 +56,86 @@ export function NavBar({
       position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
     };
 
-    setNodes(nds => [...nds, newNode]);
+    setNodes((nds) => [...nds, newNode]);
   };
 
   return (
     <div className="border-b p-4 flex items-center gap-4">
       <h1 className="text-2xl font-bold">Cache Simulator</h1>
-      <DropdownMenu onOpenChange={setToolbarOpen} open={toolbarOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="flex gap-4">
-            Add
-            {toolbarOpen ? <ChevronUp /> : <ChevronDown />}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={addCPUNode}>
-            <Cpu />
-            CPU Core
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={addCacheNode}>
-            <HardDrive />
-            Cache Layer
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Sheet />
-            Memory Viewer
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <Button size="sm">
-        <Play />
-        Run Simulation
-      </Button>
+      <Menubar>
+        <MenubarMenu>
+          <MenubarTrigger>File</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              Save <MenubarShortcut>ctrl + s</MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem>
+              Open <MenubarShortcut>ctrl + o</MenubarShortcut>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>Insert</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem onClick={addCPUNode}>
+              <Cpu />
+              CPU Core
+            </MenubarItem>
+            <MenubarItem onClick={addCacheNode}>
+              <HardDrive />
+              Cache Layer
+            </MenubarItem>
+            <MenubarItem>
+              <Sheet />
+              Memory Viewer
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>Simulation</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              Run simulation <MenubarShortcut>F5</MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem>
+              Step <MenubarShortcut>F6</MenubarShortcut>
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem>Configure</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>Settings</MenubarTrigger>
+          <MenubarContent>
+            <MenubarSub>
+              <MenubarSubTrigger>Theme</MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarItem
+                  onClick={() => setTheme("light")}
+                  className="flex justify-between"
+                >
+                  Light
+                  {theme === "light" && <Check className="w-3 h-3" />}
+                </MenubarItem>
+                <MenubarItem
+                  onClick={() => setTheme("dark")}
+                  className="flex justify-between"
+                >
+                  Dark
+                  {theme === "dark" && <Check className="w-3 h-3" />}
+                </MenubarItem>
+                <MenubarItem
+                  onClick={() => setTheme("system")}
+                  className="flex justify-between"
+                >
+                  System
+                  {theme === "system" && <Check className="w-3 h-3" />}
+                </MenubarItem>
+              </MenubarSubContent>
+            </MenubarSub>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
       <div className="ml-auto">
         <ThemeToggle />
       </div>
