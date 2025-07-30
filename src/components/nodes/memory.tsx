@@ -17,12 +17,14 @@ export type MemoryConfig = {
   accessTime: number; // in nS
 }
 
+export const MemoryIcon = HardDrive
+
 export function MemoryNode(props: NodeProps<Node<MemoryConfig, "memory">>) {
     const [data, setData] = useState<MemoryConfig>(props.data)
 
   return (
     <NodeComponent<MemoryConfig, "memory">
-      Icon={HardDrive}
+      Icon={MemoryIcon}
       {...props}
       data={data}
       setData={setData}

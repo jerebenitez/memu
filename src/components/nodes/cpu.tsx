@@ -1,5 +1,4 @@
 import { Handle, type NodeProps, type Node, Position } from "@xyflow/react";
-import { Button } from "@/components/ui/button";
 import { NodeComponent } from "./node";
 import {
   Dialog,
@@ -15,6 +14,19 @@ import { Cpu } from "lucide-react";
 export type CPUConfig = {
   label: string;
 };
+
+export const CPUIcon = Cpu
+
+export function newCPU() {
+   return {
+      id: `cpu-${Date.now()}`,
+      type: "cpu",
+      data: {
+        label: "New CPU",
+      },
+      position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
+    };
+}
 
 function CPUNodeConfigModal({
   id,
@@ -55,12 +67,12 @@ export function CPUNode(props: NodeProps<Node<CPUConfig, "cpu">>) {
   return (
     <NodeComponent<CPUConfig, "cpu">
       {...props}
-      Icon={Cpu}
+      Icon={CPUIcon}
       hasDelete={true}
       data={data}
       setData={setData}
       ConfigModal={CPUNodeConfigModal}
-      className="w-52"
+      className="w-60"
     >
       <div className="flex flex-col gap-3">
         <div className="text-xs text-muted-foreground">Processor Core</div>

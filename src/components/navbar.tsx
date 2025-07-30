@@ -1,4 +1,4 @@
-import { Activity, Check, Cpu, Eye, HardDrive, Play, Share2, Sheet } from "lucide-react";
+import { Activity, Check, Eye } from "lucide-react";
 import {
   Menubar,
   MenubarContent,
@@ -11,12 +11,13 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { Button } from "./ui/button";
 import { Dispatch, SetStateAction } from "react";
-import { ThemeToggle } from "./theme-toggle";
 import { Node } from "@xyflow/react";
 import { useTheme } from "next-themes";
 import AboutDialog from "./about";
+import { CPUIcon, newCPU } from "./nodes/cpu";
+import { CacheIcon, newCache } from "./nodes/cache";
+import { CBDIcon } from "./nodes/cbd";
 
 export function NavBar({
   setNodes,
@@ -24,39 +25,6 @@ export function NavBar({
   setNodes: Dispatch<SetStateAction<Node[]>>;
 }) {
   const { setTheme, theme } = useTheme();
-
-  const addCPUNode = () => {
-    const newNode: Node = {
-      id: `cpu-${Date.now()}`,
-      type: "cpu",
-      data: {
-        label: "New CPU",
-      },
-      position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
-    };
-
-    setNodes((nds) => [...nds, newNode]);
-  };
-
-  const addCacheNode = () => {
-    const newNode: Node = {
-      id: `cache-${Date.now()}`,
-      type: "cache",
-      data: {
-        label: "New Cache",
-        size: "1MB",
-        accessTime: 10,
-        blockSize: "64B",
-        associativity: "8-way",
-        evictionPolicy: "LRU",
-        writePolicy: "write-back",
-        writeAllocate: "write-allocate",
-      },
-      position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
-    };
-
-    setNodes((nds) => [...nds, newNode]);
-  };
 
   return (
     <div className="border-b p-4 flex items-center gap-4">
@@ -76,16 +44,16 @@ export function NavBar({
         <MenubarMenu>
           <MenubarTrigger>Insert</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem onClick={addCPUNode}>
-              <Cpu />
+            <MenubarItem onClick={() => setNodes(nds => [...nds, newCPU()])}>
+              <CPUIcon />
               CPU Core
             </MenubarItem>
-            <MenubarItem onClick={addCacheNode}>
-              <HardDrive />
+            <MenubarItem onClick={() => setNodes(nds => [...nds, newCache()])}>
+              <CacheIcon />
               Cache Layer
             </MenubarItem>
             <MenubarItem>
-              <Share2 />
+              <CBDIcon />
               CBD
             </MenubarItem>
             <MenubarSeparator />

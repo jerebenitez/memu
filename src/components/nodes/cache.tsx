@@ -14,6 +14,9 @@ type Associativity =
   | "8-way"
   | "fully-associative";
 
+
+export const CacheIcon = MemoryStick
+
 export type CacheConfig = {
   label: string;
   size: string;
@@ -25,13 +28,31 @@ export type CacheConfig = {
   writeAllocate: string;
 };
 
+export function newCache() {
+    return {
+      id: `cache-${Date.now()}`,
+      type: "cache",
+      data: {
+        label: "New Cache",
+        size: "1MB",
+        accessTime: 10,
+        blockSize: "64B",
+        associativity: "8-way",
+        evictionPolicy: "LRU",
+        writePolicy: "write-back",
+        writeAllocate: "write-allocate",
+      },
+      position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
+    };
+}
+
 export function CacheNode(props: NodeProps<Node<CacheConfig, "cache">>) {
   const [data, setData] = useState<CacheConfig>(props.data);
 
   return (
     <NodeComponent<CacheConfig, "cache">
       {...props}
-      Icon={MemoryStick}
+      Icon={CacheIcon}
       hasDelete={true}
       data={data}
       setData={setData}
