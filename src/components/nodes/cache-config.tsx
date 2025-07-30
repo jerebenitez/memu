@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Dispatch, SetStateAction } from "react";
+import { Input } from "../ui/input";
 
 export type WritePolicy = "write-back" | "write-through";
 
@@ -37,12 +38,14 @@ export function CacheNodeConfigModal({
   id,
   config,
   setConfig,
+  setLabel,
   open,
   onOpenChange,
 }: {
   id: string;
-  config: CacheConfig;
+  config: CacheConfig & { label: string };
   setConfig: Dispatch<SetStateAction<CacheConfig>>;
+  setLabel: Dispatch<SetStateAction<string>>;
   open: boolean;
   onOpenChange: (state: boolean) => void;
 }) {
@@ -60,6 +63,10 @@ export function CacheNodeConfigModal({
           <DialogTitle>{id}</DialogTitle>
         </DialogHeader>
         <div className="space-y-6 pt-3 border-t">
+            <Label className="text-xs">Label</Label>
+            <Input value={config.label} onChange={e => {
+                setLabel(e.target.value)
+            }} />
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label className="text-xs">Size</Label>

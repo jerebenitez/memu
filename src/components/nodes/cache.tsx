@@ -9,6 +9,7 @@ import { DeleteButton } from "./delete-button";
 
 export function CacheNode({ data, id }: NodeProps) {
   const [settings, setSettings] = useState<boolean>(false);
+  const [label, setLabel] = useState<string>(data.label as string)
   const [config, setConfig] = useState<CacheConfig>(data.config as CacheConfig);
 
   return (
@@ -17,7 +18,7 @@ export function CacheNode({ data, id }: NodeProps) {
         <CardTitle className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
             <HardDrive className="w-4 h-4" />
-            {data.label as string}
+            {label}
           </div>
           <div className="flex gap-1">
             <Button
@@ -31,8 +32,9 @@ export function CacheNode({ data, id }: NodeProps) {
                 id={id}
                 open={settings}
                 onOpenChange={setSettings}
-                config={config}
+                config={{ ...config, label}}
                 setConfig={setConfig}
+                setLabel={setLabel}
               />
             </Button>
             <DeleteButton id={id} />

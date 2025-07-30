@@ -80,10 +80,6 @@ export function NavBar({
             Cache Layer
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <MemoryStick />
-            Main Memory
-          </DropdownMenuItem>
-          <DropdownMenuItem>
             <Sheet />
             Memory Viewer
           </DropdownMenuItem>
