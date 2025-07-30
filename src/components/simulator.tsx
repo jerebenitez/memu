@@ -1,9 +1,22 @@
-import { Background, BackgroundVariant, ReactFlow } from "@xyflow/react";
+import { Background, BackgroundVariant, Controls, MiniMap, ReactFlow, ReactFlowProps } from "@xyflow/react";
+import { CPUNode } from "./nodes/cpu";
 
-export function Simulator() {
+const nodeTypes = {
+    cpu: CPUNode
+}
+
+export function Simulator(props: ReactFlowProps) {
     return (
-        <ReactFlow>
-            <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        </ReactFlow>
+        <div className="flex-1">
+            <ReactFlow
+                {...props}
+                fitView
+                nodeTypes={nodeTypes}
+            >
+                <Controls />
+                <MiniMap />
+                <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+            </ReactFlow>
+        </div>
     )
 }

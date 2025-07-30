@@ -1,5 +1,3 @@
-"use client";
-
 import {
   ChevronDown,
   ChevronUp,
@@ -16,11 +14,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
+import { Node } from "@xyflow/react";
 
-export function NavBar() {
+export function NavBar({
+  setNodes,
+}: {
+  setNodes: Dispatch<SetStateAction<Node[]>>;
+}) {
   const [toolbarOpen, setToolbarOpen] = useState<boolean>(false);
+
+  const addCPUNode = () => {
+    const newNode: Node = {
+      id: `cpu-${Date.now()}`,
+      type: "cpu",
+      data: {
+        label: "New CPU",
+      },
+      position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+  };
 
   return (
     <div className="border-b p-4 flex items-center gap-4">
@@ -33,7 +49,7 @@ export function NavBar() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={addCPUNode}>
             <Cpu />
             CPU Core
           </DropdownMenuItem>
