@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Handle, type NodeProps, Position } from "@xyflow/react";
 import { Cpu, Pencil, Save } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 
 export function CPUNode({ data }: NodeProps) {
     const [name, setName] = useState<string>(data.label)
@@ -22,7 +22,7 @@ export function CPUNode({ data }: NodeProps) {
             {!editing ? name : <Input value={name} onClick={e => e.stopPropagation()} onChange={e => setName(e.target.value)} />}
           </div>
           <div className="flex gap-1">
-            <Button variant="ghost" size="sm" onClick={onEdit} title="Reset Stats">
+            <Button variant="ghost" size="sm" onClick={onEdit} title="Edit">
                 {!editing ? <Pencil className="w-3 h-3" /> : <Save className="w-3 h-3" />}
             </Button>
           </div>

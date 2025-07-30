@@ -2,8 +2,8 @@ import {
   ChevronDown,
   ChevronUp,
   Cpu,
+  HardDrive,
   MemoryStick,
-  Microchip,
   Play,
   Sheet,
 } from "lucide-react";
@@ -38,6 +38,28 @@ export function NavBar({
     setNodes((nds) => [...nds, newNode]);
   };
 
+  const addCacheNode = () => {
+    const newNode: Node = {
+      id: `cache-${Date.now()}`,
+      type: "cache",
+      data: {
+        label: "New Cache",
+        config: {
+          size: "1MB",
+          accessTime: 10,
+          blockSize: "64B",
+          associativity: "8-way",
+          evictionPolicy: "LRU",
+          writePolicy: "write-back",
+          writeAllocate: "write-allocate",
+        },
+      },
+      position: { x: Math.random() * 400 + 200, y: Math.random() * 200 + 150 },
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+  };
+
   return (
     <div className="border-b p-4 flex items-center gap-4">
       <h1 className="text-2xl font-bold">Cache Simulator</h1>
@@ -53,8 +75,8 @@ export function NavBar({
             <Cpu />
             CPU Core
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Microchip />
+          <DropdownMenuItem onClick={addCacheNode}>
+            <HardDrive />
             Cache Layer
           </DropdownMenuItem>
           <DropdownMenuItem>
