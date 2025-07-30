@@ -89,6 +89,12 @@ export function NavBar({
               <Sheet />
               Memory Viewer
             </MenubarItem>
+            <MenubarSeparator />
+            <MenubarSub>
+              <MenubarSubTrigger>Templates</MenubarSubTrigger>
+              <MenubarSubContent>
+              </MenubarSubContent>
+            </MenubarSub>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
@@ -134,6 +140,9 @@ export function NavBar({
               </MenubarSubContent>
             </MenubarSub>
           </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+        <MenubarTrigger>About</MenubarTrigger>
         </MenubarMenu>
       </Menubar>
     </div>

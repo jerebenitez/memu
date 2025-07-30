@@ -5,21 +5,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Dispatch, SetStateAction } from "react";
 import { Input } from "../ui/input";
-
-export interface MemoryConfig {
-  label: string;
-  size: string;
-  accessTime: number; // in nS
-}
+import { MemoryConfig } from "./memory";
 
 export function MemoryNodeConfigModal({
   id,
@@ -62,7 +50,7 @@ export function MemoryNodeConfigModal({
             <Input
               value={config.size}
               onChange={(e) => {
-                updateConfig("size", e.target.value);
+                updateConfig("config", e.target.value);
               }}
             />
           </div>

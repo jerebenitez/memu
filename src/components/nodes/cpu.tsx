@@ -1,52 +1,73 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Handle, type NodeProps, Position } from "@xyflow/react";
-import { Cpu, Settings } from "lucide-react";
+import { Handle, type NodeProps, type Node, Position } from "@xyflow/react";
 import { Button } from "@/components/ui/button";
-import { DeleteButton } from "./delete-button";
-import { useState } from "react";
-import { CPUNodeConfigModal } from "./cpu-config";
+import { NodeComponent } from "./node";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Input } from "../ui/input";
+import { Cpu } from "lucide-react";
 
-export function CPUNode({ data, id }: NodeProps) {
-  const [settings, setSettings] = useState<boolean>(false);
-  const [label, setLabel] = useState<string>(data.label as string);
+export type CPUConfig = {
+  label: string;
+};
+
+function CPUNodeConfigModal({
+  id,
+  config,
+  setConfig,
+  open,
+  onOpenChange,
+}: {
+  id: string;
+  config: CPUConfig;
+  setConfig: Dispatch<SetStateAction<CPUConfig>>;
+  open: boolean;
+  onOpenChange: (state: boolean) => void;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="w-96">
+        <DialogHeader>
+          <DialogTitle>{id}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-6 pt-3 border-t">
+          <Label className="text-xs">Label</Label>
+          <Input
+            value={config.label}
+            onChange={(e) => {
+              setConfig({ ...config, label: e.target.value });
+            }}
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function CPUNode(props: NodeProps<Node<CPUConfig, "cpu">>) {
+    const [data, setData] = useState<CPUConfig>(props.data)
 
   return (
-    <Card className="w-60 shadow-lg">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-2">
-            <Cpu className="w-4 h-4" />
-            {label}
-          </div>
-          <div className="flex gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSettings(!settings)}
-              title="Edit"
-            >
-              <Settings className="w-3 h-3" />
-              <CPUNodeConfigModal
-                id={id}
-                open={settings}
-                onOpenChange={setSettings}
-                label={label}
-                setLabel={setLabel}
-              />
-            </Button>
-            <DeleteButton id={id as string} />
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="flex flex-col gap-3">
-          <Button variant="outline" size="sm" className="text-xs h-6">
-            Edit code
-          </Button>
-          <div className="text-xs text-muted-foreground">Processor Core</div>
-        </div>
-        <Handle type="source" position={Position.Right} />
-      </CardContent>
-    </Card>
+    <NodeComponent<CPUConfig, "cpu">
+      {...props}
+      Icon={Cpu}
+      hasDelete={true}
+      data={data}
+      setData={setData}
+      ConfigModal={CPUNodeConfigModal}
+    >
+      <div className="flex flex-col gap-3">
+        <Button variant="outline" size="sm" className="text-xs h-6">
+          Edit code
+        </Button>
+        <div className="text-xs text-muted-foreground">Processor Core</div>
+      </div>
+      <Handle type="source" position={Position.Right} />
+    </NodeComponent>
   );
 }
