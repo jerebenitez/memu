@@ -1,75 +1,101 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { type Node, NodeProps } from "@xyflow/react";
-import { HardDrive, LucideIcon, Settings } from "lucide-react";
+"use client"
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import type { Node, NodeProps } from "@xyflow/react"
+import { type LucideIcon, Settings } from "lucide-react"
 import {
-  ComponentType,
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
+  type ComponentType,
+  type Dispatch,
+  type PropsWithChildren,
+  type SetStateAction,
   useState,
-} from "react";
-import { Button } from "@/components/ui/button";
-import { DeleteButton } from "./delete-button";
+  memo,
+  useCallback,
+} from "react"
+import { DeleteButton } from "./delete-button"
+import type { JSX } from "react/jsx-runtime" // Import JSX to fix the undeclared variable error
 
 type ConfigModalProps<T> = {
-  id: string;
-  open: boolean;
-  onOpenChange: Dispatch<SetStateAction<boolean>>;
-  config: T;
-  setConfig: Dispatch<SetStateAction<T>>;
-};
+  id: string
+  open: boolean
+  onOpenChange: Dispatch<SetStateAction<boolean>>
+  config: T
+  setConfig: Dispatch<SetStateAction<T>>
+}
 
-export function NodeComponent<
-  T extends Record<string, unknown> & { label: string },
-  K extends string = string,
->({
+type NodeData = Record<string, unknown> & {
+  label: string
+}
+
+interface NodeComponentProps<T extends NodeData, K extends string = string>
+  extends NodeProps<Node<T, K>>,
+    PropsWithChildren {
+  ConfigModal?: ComponentType<ConfigModalProps<T>>
+  Icon: LucideIcon
+  hasDelete?: boolean
+  data: T
+  setData: Dispatch<SetStateAction<T>>
+  className?: string
+}
+
+function NodeComponentInner<T extends NodeData, K extends string = string>({
   data,
   setData,
   id,
   ConfigModal,
   Icon,
-  hasDelete,
+  hasDelete = false,
   children,
-}: NodeProps<Node<T, K>> & {
-  ConfigModal?: ComponentType<ConfigModalProps<T>>;
-  Icon: LucideIcon
-  hasDelete?: boolean;
-  data: T;
-  setData: Dispatch<SetStateAction<T>>
-} & PropsWithChildren) {
-  const [settings, setSettings] = useState<boolean>(false);
+  className,
+}: NodeComponentProps<T, K>) {
+  const [isConfigOpen, setIsConfigOpen] = useState(false)
+
+  const handleConfigToggle = useCallback(() => {
+    setIsConfigOpen((prev) => !prev)
+  }, [])
+
+  const displayLabel = data.label || id
 
   return (
-    <Card className="w-80 shadow-lg">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-2">
-            <Icon className="w-4 h-4" />
-            {data.label || id}
-          </div>
-          <div className="flex gap-1">
-            {ConfigModal && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSettings(!settings)}
-                title="Edit"
-              >
-                <Settings className="w-3 h-3" />
-                <ConfigModal
-                  id={id}
-                  open={settings}
-                  onOpenChange={setSettings}
-                  config={data}
-                  setConfig={setData}
-                />
-              </Button>
-            )}
-            {hasDelete && <DeleteButton id={id} />}
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">{children}</CardContent>
-    </Card>
-  );
+    <>
+      <Card className={`w-80 shadow-lg ${className || ""}`}>
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-2">
+              <Icon className="w-4 h-4" aria-hidden="true" />
+              <span title={displayLabel}>{displayLabel}</span>
+            </div>
+
+            <div className="flex gap-1" role="group" aria-label="Node actions">
+              {ConfigModal && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleConfigToggle}
+                  aria-label={`Configure ${displayLabel}`}
+                  title="Configure node"
+                >
+                  <Settings className="w-3 h-3" />
+                </Button>
+              )}
+
+              {hasDelete && <DeleteButton id={id} aria-label={`Delete ${displayLabel}`} />}
+            </div>
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent className="pt-0">{children}</CardContent>
+      </Card>
+
+      {ConfigModal && (
+        <ConfigModal id={id} open={isConfigOpen} onOpenChange={setIsConfigOpen} config={data} setConfig={setData} />
+      )}
+    </>
+  )
 }
+
+// Memoize the component for better performance
+export const NodeComponent = memo(NodeComponentInner) as <T extends NodeData, K extends string = string>(
+  props: NodeComponentProps<T, K>,
+) => JSX.Element
