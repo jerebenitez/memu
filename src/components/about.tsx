@@ -41,7 +41,10 @@ export default function AboutDialog({ children }: PropsWithChildren) {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Name</span>
-                <Button variant="ghost" className="text-sm font-medium">Jeremías Benítez</Button>
+                <Button variant="ghost" className="text-sm font-medium">
+                    <span className="mr-1">🇦🇷</span>
+                    Jeremías Benítez
+                </Button>
               </div>
 
               <div className="flex items-center justify-between">
@@ -70,12 +73,6 @@ export default function AboutDialog({ children }: PropsWithChildren) {
                 </Button>
               </div>
             </div>
-          </div>
-
-          <div className="text-center">
-            <p className="text-muted-foreground">
-              🇦🇷
-            </p>
           </div>
         </div>
       </DialogContent>

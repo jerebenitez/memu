@@ -60,11 +60,9 @@ export function CPUNode(props: NodeProps<Node<CPUConfig, "cpu">>) {
       data={data}
       setData={setData}
       ConfigModal={CPUNodeConfigModal}
+      className="w-52"
     >
       <div className="flex flex-col gap-3">
-        <Button variant="outline" size="sm" className="text-xs h-6">
-          Edit code
-        </Button>
         <div className="text-xs text-muted-foreground">Processor Core</div>
       </div>
       <Handle type="source" position={Position.Right} />

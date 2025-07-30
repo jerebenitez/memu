@@ -1,4 +1,4 @@
-import { Check, Cpu, HardDrive, Play, Sheet } from "lucide-react";
+import { Activity, Check, Cpu, Eye, HardDrive, Play, Share2, Sheet } from "lucide-react";
 import {
   Menubar,
   MenubarContent,
@@ -85,9 +85,23 @@ export function NavBar({
               Cache Layer
             </MenubarItem>
             <MenubarItem>
-              <Sheet />
-              Memory Viewer
+              <Share2 />
+              CBD
             </MenubarItem>
+            <MenubarSeparator />
+            <MenubarSub>
+              <MenubarSubTrigger>Graphical</MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarItem>
+                  <Eye />
+                  Memory Viewer
+                </MenubarItem>
+                <MenubarItem>
+                  <Activity />
+                  Access Trace Viewer
+                </MenubarItem>
+              </MenubarSubContent>
+            </MenubarSub>
             <MenubarSeparator />
             <MenubarSub>
               <MenubarSubTrigger>Templates</MenubarSubTrigger>
@@ -103,6 +117,9 @@ export function NavBar({
             </MenubarItem>
             <MenubarItem>
               Step <MenubarShortcut>F6</MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem>
+              Reset <MenubarShortcut>F7</MenubarShortcut>
             </MenubarItem>
             <MenubarSeparator />
             <MenubarItem>Configure</MenubarItem>

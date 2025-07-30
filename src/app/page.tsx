@@ -2,9 +2,9 @@
 
 import { NavBar } from "@/components/navbar";
 import { Simulator } from "@/components/simulator";
-import { Edge, Node, useEdgesState, useNodesState } from "@xyflow/react";
+import { addEdge, Connection, Edge, Node, useEdgesState, useNodesState } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 const initialNodes: Node[] = [
   {
@@ -25,6 +25,8 @@ const initialEdges: Edge[] = [];
 export default function Home() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges])
 
   useEffect(() => {
     const handleDeleteNode = (event: CustomEvent) => {
@@ -58,6 +60,7 @@ export default function Home() {
         edges={edges}
         onEdgesChange={onEdgesChange}
         onNodesChange={onNodesChange}
+        onConnect={onConnect}
         deleteKeyCode="Delete"
         onNodesDelete={(nds) => {
           const nodeIds = nds.map((node) => node.id);
