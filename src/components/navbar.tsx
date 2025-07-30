@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { ThemeToggle } from "./theme-toggle";
 
 export function NavBar() {
   const [toolbarOpen, setToolbarOpen] = useState<boolean>(false);
@@ -54,6 +55,9 @@ export function NavBar() {
         <Play />
         Run Simulation
       </Button>
+      <div className="ml-auto">
+        <ThemeToggle />
+      </div>
     </div>
   );
 }
