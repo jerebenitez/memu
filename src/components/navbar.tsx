@@ -16,6 +16,7 @@ import { Dispatch, SetStateAction } from "react";
 import { ThemeToggle } from "./theme-toggle";
 import { Node } from "@xyflow/react";
 import { useTheme } from "next-themes";
+import AboutDialog from "./about";
 
 export function NavBar({
   setNodes,
@@ -92,8 +93,7 @@ export function NavBar({
             <MenubarSeparator />
             <MenubarSub>
               <MenubarSubTrigger>Templates</MenubarSubTrigger>
-              <MenubarSubContent>
-              </MenubarSubContent>
+              <MenubarSubContent></MenubarSubContent>
             </MenubarSub>
           </MenubarContent>
         </MenubarMenu>
@@ -142,7 +142,9 @@ export function NavBar({
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
-        <MenubarTrigger>About</MenubarTrigger>
+          <AboutDialog>
+            <MenubarTrigger>About</MenubarTrigger>
+          </AboutDialog>
         </MenubarMenu>
       </Menubar>
     </div>
