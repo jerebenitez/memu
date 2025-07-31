@@ -22,11 +22,50 @@ const initialNodes: Node[] = [
 ];
 const initialEdges: Edge[] = [];
 
+
 export default function Home() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges])
+  const isValidConnection = useCallback(
+    (connection: Connection): boolean => {
+        const source = nodes.find(n => n.id === connection.source)
+        const target = nodes.find(n => n.id === connection.target)
+
+        if (!source || !target) return false
+
+        switch(source.type) {
+            case "cpu":
+                // CPUs can only be connected to a single memory or cache
+                return (
+                    (target.type === "cache" || target.type === "memory")
+                    && edges.find(e => e.source === connection.source) === undefined
+                )
+            case "memory":
+                // Main memory can't be the source of a connection, this is here
+                // for completeness
+                return false
+            case "cache":
+                // Caches can have a single connection to a CPU or other
+                // cache
+                return (
+                    (target.type === "cache" || target.type === "memory")
+                    && edges.find(e => e.target === connection.target) === undefined
+                    && edges.find(e => e.source === connection.source) === undefined
+                )
+        }
+
+        return true
+    },
+    [nodes, edges]
+  )
+
+  const onConnect = useCallback(
+      (params: Connection) => {
+          if (isValidConnection(params)) {
+            setEdges(eds => addEdge(params, eds))
+          }
+      }, [setEdges, isValidConnection])
 
   useEffect(() => {
     const handleDeleteNode = (event: CustomEvent) => {
