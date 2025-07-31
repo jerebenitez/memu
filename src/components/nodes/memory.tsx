@@ -36,7 +36,8 @@ export function MemoryNode(props: NodeProps<Node<MemoryConfig, "memory">>) {
       <div className="text-xs text-muted-foreground">
         Access Time: {data.accessTime}
       </div>
-      <Handle type="target" position={Position.Left} />
+      <Handle type="target" id="input" position={Position.Left} />
+      <Handle type="source" id="viewer" position={Position.Bottom} />
     </NodeComponent>
   );
 }

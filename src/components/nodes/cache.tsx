@@ -80,8 +80,10 @@ export function CacheNode(props: NodeProps<Node<CacheConfig, "cache">>) {
         </Badge>
       </div>
       </div>
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
+      <Handle type="source" id="cbd" position={Position.Top} />
+      <Handle type="source" id="viewer" position={Position.Bottom} />
+      <Handle type="target" id="input" position={Position.Left} />
+      <Handle type="source" id="output" position={Position.Right} />
     </NodeComponent>
   );
 }

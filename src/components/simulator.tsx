@@ -22,7 +22,7 @@ export function Simulator(props: ReactFlowProps) {
                 colorMode={theme as ColorMode || 'system'}
             >
                 <Controls />
-                <MiniMap />
+                <MiniMap zoomable pannable/>
                 <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
             </ReactFlow>
         </div>
