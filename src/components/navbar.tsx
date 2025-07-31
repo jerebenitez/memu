@@ -17,7 +17,7 @@ import { useTheme } from "next-themes";
 import AboutDialog from "./about";
 import { CPUIcon, newCPU } from "./nodes/cpu";
 import { CacheIcon, newCache } from "./nodes/cache";
-import { CBDIcon } from "./nodes/cbd";
+import { CBDIcon, newCBD } from "./nodes/cbd";
 
 export function NavBar({
   setNodes,
@@ -52,7 +52,7 @@ export function NavBar({
               <CacheIcon />
               Cache Layer
             </MenubarItem>
-            <MenubarItem>
+            <MenubarItem onClick={() => setNodes(nds => [...nds, newCBD()])}>
               <CBDIcon />
               CBD
             </MenubarItem>

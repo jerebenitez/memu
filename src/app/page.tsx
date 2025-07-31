@@ -48,23 +48,25 @@ export default function Home() {
         );
       case "memory":
         // Main memory can't be the source of a connection, unless it connects
-          // to a viewer
+        // to a viewer
         return target.type === "viewer";
       case "cache":
-        console.log(connection.sourceHandle);
         // Caches can have a single connection to memory or other
         // cache
         switch (connection.sourceHandle) {
           case "cbd":
-            return false;
+            return target.type === "cbd";
           case "viewer":
             return false;
           case "output":
-            return (
-              (target.type === "cache" || target.type === "memory") &&
-              edges.find((e) => e.target === connection.target) === undefined &&
-              edges.find((e) => e.source === connection.source) === undefined
-            );
+            if (target.type === "cache") return true;
+            else if (target.type === "memory") {
+              return (
+                edges.find((e) => e.target === connection.target) ===
+                  undefined &&
+                edges.find((e) => e.source === connection.source) === undefined
+              );
+            }
         }
     }
 

@@ -3,11 +3,13 @@ import { CPUNode } from "./nodes/cpu";
 import { CacheNode } from "./nodes/cache";
 import { MemoryNode } from "./nodes/memory";
 import { useTheme } from "next-themes";
+import { CBDNode } from "./nodes/cbd";
 
 const nodeTypes = {
     cpu: CPUNode,
     cache: CacheNode,
-    memory: MemoryNode
+    memory: MemoryNode,
+    cbd: CBDNode
 }
 
 export function Simulator(props: ReactFlowProps) {
