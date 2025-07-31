@@ -60,7 +60,7 @@ function NodeComponentInner<T extends NodeData, K extends string = string>({
   return (
     <>
       <Card className={`w-80 shadow-lg ${className || ""}`}>
-        <CardHeader className="pb-2">
+        <CardHeader>
           <CardTitle className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
               <Icon className="w-4 h-4" aria-hidden="true" />

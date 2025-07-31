@@ -10,9 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Input } from "../ui/input";
 import { Cpu } from "lucide-react";
+import { Textarea } from "../ui/textarea";
 
 export type CPUConfig = {
   label: string;
+  code?: string
 };
 
 export const CPUIcon = Cpu
@@ -47,14 +49,27 @@ function CPUNodeConfigModal({
         <DialogHeader>
           <DialogTitle>{id}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-6 pt-3 border-t">
-          <Label className="text-xs">Label</Label>
+        <div className="space-y-6 pt-3">
+        <div className="space-y-2">
+          <Label className="text-xs" htmlFor="label">Label</Label>
           <Input
+            id="label"
             value={config.label}
             onChange={(e) => {
               setConfig({ ...config, label: e.target.value });
             }}
           />
+          </div><div className="space-y-2">
+          <Label className="text-xs" htmlFor="code">Code</Label>
+          <Textarea
+            rows={10}
+            id="code"
+            value={config.code}
+            onChange={(e) => {
+              setConfig({ ...config, code: e.target.value });
+            }}
+          /><p className="text-muted-foreground text-sm">Language coming soon.</p>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -74,8 +89,10 @@ export function CPUNode(props: NodeProps<Node<CPUConfig, "cpu">>) {
       ConfigModal={CPUNodeConfigModal}
       className="w-60"
     >
-      <div className="flex flex-col gap-3">
-        <div className="text-xs text-muted-foreground">Processor Core</div>
+        <div className="bg-muted/50 p-3 rounded-lg space-y-3">
+        <div className="text-xs text-muted-foreground">
+            {data.code ? "Coded loaded." : "No code loaded."}
+        </div>
       </div>
       <Handle type="source" position={Position.Right} />
     </NodeComponent>

@@ -2,8 +2,9 @@
 
 import { NavBar } from "@/components/navbar";
 import { Simulator } from "@/components/simulator";
-import { addEdge, Connection, Edge, Node, useEdgesState, useNodesState } from "@xyflow/react";
+import { addEdge, ColorMode, Connection, Edge, Node, useEdgesState, useNodesState } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { useTheme } from "next-themes";
 import { useCallback, useEffect } from "react";
 
 const initialNodes: Node[] = [
@@ -24,11 +25,11 @@ const initialEdges: Edge[] = [];
 
 
 export default function Home() {
+    const { theme } = useTheme()
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const isValidConnection = useCallback(
-    (connection: Connection): boolean => {
+  const isValidConnection = (connection: Edge | Connection): boolean => {
         const source = nodes.find(n => n.id === connection.source)
         const target = nodes.find(n => n.id === connection.target)
 
@@ -46,7 +47,7 @@ export default function Home() {
                 // for completeness
                 return false
             case "cache":
-                // Caches can have a single connection to a CPU or other
+                // Caches can have a single connection to memory or other
                 // cache
                 return (
                     (target.type === "cache" || target.type === "memory")
@@ -56,16 +57,12 @@ export default function Home() {
         }
 
         return true
-    },
-    [nodes, edges]
-  )
+    }
 
-  const onConnect = useCallback(
-      (params: Connection) => {
-          if (isValidConnection(params)) {
-            setEdges(eds => addEdge(params, eds))
-          }
-      }, [setEdges, isValidConnection])
+const onConnect = useCallback(
+    (params: Connection) => setEdges((els) => addEdge(params, els)),
+    [setEdges],
+  );
 
   useEffect(() => {
     const handleDeleteNode = (event: CustomEvent) => {
@@ -100,6 +97,8 @@ export default function Home() {
         onEdgesChange={onEdgesChange}
         onNodesChange={onNodesChange}
         onConnect={onConnect}
+        isValidConnection={isValidConnection}
+        colorMode={theme as ColorMode}
         deleteKeyCode="Delete"
         onNodesDelete={(nds) => {
           const nodeIds = nds.map((node) => node.id);

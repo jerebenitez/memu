@@ -67,7 +67,7 @@ function MemoryNodeConfigModal({
         <DialogHeader>
           <DialogTitle>{id}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-6 pt-3 border-t">
+        <div className="space-y-6 pt-3">
           <div>
             <Label className="text-xs">Label</Label>
             <Input
