@@ -2,9 +2,15 @@
 
 import { NavBar } from "@/components/navbar";
 import { Simulator } from "@/components/simulator";
-import { addEdge, ColorMode, Connection, Edge, Node, useEdgesState, useNodesState } from "@xyflow/react";
+import {
+  addEdge,
+  Connection,
+  Edge,
+  Node,
+  useEdgesState,
+  useNodesState,
+} from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useTheme } from "next-themes";
 import { useCallback, useEffect } from "react";
 
 const initialNodes: Node[] = [
@@ -23,43 +29,41 @@ const initialNodes: Node[] = [
 ];
 const initialEdges: Edge[] = [];
 
-
 export default function Home() {
-    const { theme } = useTheme()
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const isValidConnection = (connection: Edge | Connection): boolean => {
-        const source = nodes.find(n => n.id === connection.source)
-        const target = nodes.find(n => n.id === connection.target)
+    const source = nodes.find((n) => n.id === connection.source);
+    const target = nodes.find((n) => n.id === connection.target);
 
-        if (!source || !target) return false
+    if (!source || !target) return false;
 
-        switch(source.type) {
-            case "cpu":
-                // CPUs can only be connected to a single memory or cache
-                return (
-                    (target.type === "cache" || target.type === "memory")
-                    && edges.find(e => e.source === connection.source) === undefined
-                )
-            case "memory":
-                // Main memory can't be the source of a connection, this is here
-                // for completeness
-                return false
-            case "cache":
-                // Caches can have a single connection to memory or other
-                // cache
-                return (
-                    (target.type === "cache" || target.type === "memory")
-                    && edges.find(e => e.target === connection.target) === undefined
-                    && edges.find(e => e.source === connection.source) === undefined
-                )
-        }
-
-        return true
+    switch (source.type) {
+      case "cpu":
+        // CPUs can only be connected to a single memory or cache
+        return (
+          (target.type === "cache" || target.type === "memory") &&
+          edges.find((e) => e.source === connection.source) === undefined
+        );
+      case "memory":
+        // Main memory can't be the source of a connection, this is here
+        // for completeness
+        return false;
+      case "cache":
+        // Caches can have a single connection to memory or other
+        // cache
+        return (
+          (target.type === "cache" || target.type === "memory") &&
+          edges.find((e) => e.target === connection.target) === undefined &&
+          edges.find((e) => e.source === connection.source) === undefined
+        );
     }
 
-const onConnect = useCallback(
+    return true;
+  };
+
+  const onConnect = useCallback(
     (params: Connection) => setEdges((els) => addEdge(params, els)),
     [setEdges],
   );
@@ -67,7 +71,7 @@ const onConnect = useCallback(
   useEffect(() => {
     const handleDeleteNode = (event: CustomEvent) => {
       const { nodeId } = event.detail;
-      console.log(event.detail)
+      console.log(event.detail);
       deleteNode(nodeId);
     };
 
@@ -98,7 +102,6 @@ const onConnect = useCallback(
         onNodesChange={onNodesChange}
         onConnect={onConnect}
         isValidConnection={isValidConnection}
-        colorMode={theme as ColorMode}
         deleteKeyCode="Delete"
         onNodesDelete={(nds) => {
           const nodeIds = nds.map((node) => node.id);
