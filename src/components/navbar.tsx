@@ -39,6 +39,15 @@ export function NavBar({
             <MenubarItem>
               Open <MenubarShortcut>ctrl + o</MenubarShortcut>
             </MenubarItem>
+            <MenubarSeparator />
+            <MenubarSub>
+              <MenubarSubTrigger>Templates</MenubarSubTrigger>
+              <MenubarSubContent></MenubarSubContent>
+            </MenubarSub>
+            <MenubarSeparator />
+            <MenubarItem>
+                Reset
+            </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
@@ -69,11 +78,6 @@ export function NavBar({
                   Access Trace Viewer
                 </MenubarItem>
               </MenubarSubContent>
-            </MenubarSub>
-            <MenubarSeparator />
-            <MenubarSub>
-              <MenubarSubTrigger>Templates</MenubarSubTrigger>
-              <MenubarSubContent></MenubarSubContent>
             </MenubarSub>
           </MenubarContent>
         </MenubarMenu>
