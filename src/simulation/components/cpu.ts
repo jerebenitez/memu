@@ -3,7 +3,7 @@ import { IComponent, IMessage } from "../interfaces";
 
 export class CPU implements IComponent {
   id: string;
-  ports = ["out"];
+  ports = ["right"];
   private engine: SimulationEngine;
   private program: string[];
   private pc = 0;

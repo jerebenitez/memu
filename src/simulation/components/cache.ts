@@ -3,7 +3,7 @@ import { IComponent, IMemory, IMessage, PortId } from "../interfaces";
 
 export class Cache implements IComponent, IMemory {
     id: string
-    ports = ["in", "out"]
+    ports = ["left", "right"]
     private engine: SimulationEngine
     private storage = new Map<number, number>()
     

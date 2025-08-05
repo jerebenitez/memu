@@ -1,7 +1,7 @@
 export type NodeId = string
 // Port format:
 // "nodeId:portName"
-// e.g. -> "CPU1:out"
+// e.g. -> "CPU1:right"
 export type PortId = string
 
 export interface IMessage {
