@@ -1,62 +1,93 @@
-import { IComponent, IMessage, NodeId, PortId } from "./interfaces";
+import {
+  IComponent,
+  IMessage,
+  ISimulationEngineAPI,
+  NodeId,
+  PortId,
+} from "./interfaces";
 
-export class SimulationEngine {
-    private nodes = new Map<NodeId, IComponent>()
-    private connections = new Map<PortId, PortId>()
-    private messageQueue: { msg: IMessage, target: PortId }[] = []
-    private time = 0
+export class SimulationEngine implements ISimulationEngineAPI {
+  private nodes = new Map<NodeId, IComponent>();
+  private connections = new Map<PortId, PortId>();
+  private messageQueue: { msg: IMessage; target: PortId }[] = [];
+  private time = 0;
+  private timer: NodeJS.Timeout | null = null;
 
-    addNode(node: IComponent) {
-        this.nodes.set(node.id, node)
+  addNode(node: IComponent) {
+    this.nodes.set(node.id, node);
+  }
+
+  removeNode(nodeId: NodeId) {
+    const node = this.nodes.get(nodeId);
+    this.nodes.delete(nodeId);
+
+    // Clean up connections
+    for (const [source, target] of this.connections) {
+      if (source === nodeId || target === nodeId)
+        this.connections.delete(source);
     }
 
-    removeNode(nodeId: NodeId) {
-        this.nodes.delete(nodeId)
+    return node;
+  }
 
-        // Clean up connections
-        for (const [source, target] of this.connections) {
-            if (source === nodeId || target === nodeId)
-                this.connections.delete(source)
-        }
+  connect(source: PortId, target: PortId) {
+    // SimulationEngine does not care about connection policies,
+    // that's a responsibility of each node
+    this.connections.set(source, target);
+    this.connections.set(target, source);
+  }
+
+  disconnect(a: PortId, b: PortId) {
+    this.connections.delete(a);
+    this.connections.delete(b);
+  }
+
+  sendMessage(from: PortId, msg: IMessage) {
+    const target = this.connections.get(from);
+
+    if (target) this.messageQueue.push({ msg, target });
+  }
+
+  tick() {
+    this.time++;
+    const queue = [...this.messageQueue];
+    this.messageQueue = [];
+
+    for (const { msg, target } of queue) {
+      const [nodeId, portName] = target.split(":");
+      const node = this.nodes.get(nodeId);
+      if (node) node.handleMessage(msg, portName);
     }
 
-    connect(source: PortId, target: PortId) {
-        this.connections.set(source, target)
-        this.connections.set(target, source)
+    for (const node of this.nodes.values()) node.tick();
+  }
+
+  start(intervalMs = 500) {
+    if (this.timer) return;
+    this.timer = setInterval(() => this.tick(), intervalMs);
+  }
+
+  pause() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
     }
+  }
 
-    disconnect(a: PortId, b: PortId) {
-        this.connections.delete(a)
-        this.connections.delete(b)
-    }
+  step() {
+    this.tick();
+  }
 
-    sendMessage(from: PortId, msg: IMessage) {
-        const target = this.connections.get(from)
-
-        if (target)
-            this.messageQueue.push({ msg, target })
-    }
-
-    tick() {
-        this.time++
-        const queue = [...this.messageQueue]
-        this.messageQueue = []
-
-        for (const { msg, target } of queue) {
-            const [nodeId, portName] = target.split(":")
-            const node = this.nodes.get(nodeId)
-            if (node) node.handleMessage(msg, portName)
-        }
-
-        for (const node of this.nodes.values())
-            node.tick()
-    }
-
-    getState() {
-        return {
-            time: this.time,
-            nodes: Array.from(this.nodes.values()).map(n => n.id),
-            connections: Array.from(this.connections.entries())
-        }
-    }
+  getState() {
+    return {
+      time: this.time,
+      nodes: Array.from(this.nodes.values()).map((n) => ({
+        id: n.id,
+        type: n.type,
+        metrics: n.getMetrics(),
+        internal: n.getInternalState(),
+      })),
+      connections: Array.from(this.connections.entries()),
+    };
+  }
 }

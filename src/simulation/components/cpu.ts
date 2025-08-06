@@ -3,6 +3,7 @@ import { IComponent, IMessage } from "../interfaces";
 
 export class CPU implements IComponent {
   id: string;
+  type = "CPU";
   ports = ["right"];
   private engine: SimulationEngine;
   private program: string[];
@@ -10,6 +11,7 @@ export class CPU implements IComponent {
   private busy = false;
   private registers = new Array(32);
   private exception: { message: string } | null = null;
+  private metrics = { inst: 0 };
 
   constructor(id: string, engine: SimulationEngine, program?: string[]) {
     this.id = id;
@@ -32,6 +34,7 @@ export class CPU implements IComponent {
 
     if (this.pc < this.program.length) {
       const instr = this.program[this.pc++];
+      this.metrics.inst++
 
       const op = this.parse(instr);
 
@@ -39,7 +42,10 @@ export class CPU implements IComponent {
         case "lw":
           this.engine.sendMessage(`${this.id}:out`, {
             type: "LOAD",
-            payload: { address: op.address, value: this.registers[op.src + op.offset] },
+            payload: {
+              address: op.address,
+              value: this.registers[op.src + op.offset],
+            },
             source: this.id,
           });
           this.busy = true;
@@ -58,7 +64,10 @@ export class CPU implements IComponent {
         case "sw":
           this.engine.sendMessage(`${this.id}:out`, {
             type: "STORE",
-            payload: { address: op.address, value: this.registers[op.src + op.offset] },
+            payload: {
+              address: op.address,
+              value: this.registers[op.src + op.offset],
+            },
             source: this.id,
           });
           this.busy = true;
@@ -71,6 +80,7 @@ export class CPU implements IComponent {
 
   handleMessage(msg: IMessage) {
     if (msg.source !== this.id) return;
+
     switch (msg.type) {
       case "RESPONSE":
         this.busy = false;
@@ -85,7 +95,7 @@ export class CPU implements IComponent {
     | { type: "lw" | "sw"; address: number; offset: number; src: number }
     | { type: "li" | "si"; address: number; value: number } {
     const wordRegex = /([sl]w)\s\$(\d{1,2}),\s*(\d+)+\(\$(\d{1,2})\)/;
-    const immediateRegex = /([sl]i)\s\$(\d{1,2}),\s*(\d+);/
+    const immediateRegex = /([sl]i)\s\$(\d{1,2}),\s*(\d+);/;
 
     const isValidReg = (register: number) =>
       register > 0 && register < this.registers.length;
@@ -122,5 +132,18 @@ export class CPU implements IComponent {
     }
 
     return { type: "nop" };
+  }
+
+  getMetrics() {
+    return this.metrics;
+  }
+
+  getInternalState() {
+    return {
+      pc: this.pc,
+      busy: this.busy,
+      registers: this.registers,
+      exception: this.exception
+    };
   }
 }
