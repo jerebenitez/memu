@@ -2,6 +2,7 @@
 
 import { NavBar } from "@/components/navbar";
 import { Simulator } from "@/components/simulator";
+import { SimulationProvider } from "@/simulation/context";
 import {
   addEdge,
   Connection,
@@ -103,7 +104,7 @@ export default function Home() {
   };
 
   return (
-    <>
+    <SimulationProvider>
       <NavBar setNodes={setNodes} />
       <Simulator
         nodes={nodes}
@@ -125,6 +126,6 @@ export default function Home() {
           );
         }}
       />
-    </>
+    </SimulationProvider>
   );
 }

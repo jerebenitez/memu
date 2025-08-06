@@ -22,6 +22,7 @@ export class CPU implements IComponent {
 
   loadProgram(program?: string[]) {
     this.program = program ?? [];
+    this.pc = 0
   }
 
   reset() {

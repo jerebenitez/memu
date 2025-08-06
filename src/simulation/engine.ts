@@ -12,9 +12,11 @@ export class SimulationEngine implements ISimulationEngineAPI {
   private messageQueue: { msg: IMessage; target: PortId }[] = [];
   private time = 0;
   private timer: NodeJS.Timeout | null = null;
+  private listeners: (() => void)[] = [];
 
   addNode(node: IComponent) {
     this.nodes.set(node.id, node);
+    this.emit()
   }
 
   removeNode(nodeId: NodeId) {
@@ -27,6 +29,7 @@ export class SimulationEngine implements ISimulationEngineAPI {
         this.connections.delete(source);
     }
 
+    this.emit()
     return node;
   }
 
@@ -35,11 +38,15 @@ export class SimulationEngine implements ISimulationEngineAPI {
     // that's a responsibility of each node
     this.connections.set(source, target);
     this.connections.set(target, source);
+
+    this.emit()
   }
 
   disconnect(a: PortId, b: PortId) {
     this.connections.delete(a);
     this.connections.delete(b);
+
+    this.emit()
   }
 
   sendMessage(from: PortId, msg: IMessage) {
@@ -60,6 +67,8 @@ export class SimulationEngine implements ISimulationEngineAPI {
     }
 
     for (const node of this.nodes.values()) node.tick();
+
+    this.emit()
   }
 
   start(intervalMs = 500) {
@@ -78,6 +87,17 @@ export class SimulationEngine implements ISimulationEngineAPI {
     this.tick();
   }
 
+  onTick(listener: () => void) {
+    this.listeners.push(listener);
+    return () => {
+      this.listeners = this.listeners.filter((l) => l !== listener);
+    };
+  }
+
+  private emit() {
+    for (const l of this.listeners) l();
+  }
+
   getState() {
     return {
       time: this.time,
@@ -89,5 +109,9 @@ export class SimulationEngine implements ISimulationEngineAPI {
       })),
       connections: Array.from(this.connections.entries()),
     };
+  }
+
+  getNode(id: NodeId) {
+    return this.nodes.get(id);
   }
 }
